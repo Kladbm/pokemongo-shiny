@@ -1,6 +1,6 @@
 // import pm_local_csv_url from '@data/pm.csv?url';
 import raw_names from '@data/name.csv';
-import { csv2json, fetch_data, get_item, confirm_to_reset, } from '@lib/u.svelte.js';
+import { csv2json, fetch_data, get_item, confirm_to_reset, STATUS_COUNT, } from '@lib/u.svelte.js';
 import { recorder, } from '@lib/recorder.svelte.js';
 import { session, DEFAULT_PM_DATA_SOURCE, LOCAL_PM_DATA_SOURCE } from '@lib/config.svelte.js';
 
@@ -56,7 +56,9 @@ class PokemonManager {
 
 	// status_counts uses the pre-sorted list, making it much faster
 	status_counts = $derived.by(() => {
-		const counts = { 0: 0, 1: 0, 2: 0, 3: 0 };
+		const counts = Object.fromEntries(
+			Array.from({ length: STATUS_COUNT }, (_, status) => [status, 0])
+		);
 		this.sorted_pms.forEach(pm => {
 			const s = Number(pm.status || 0);
 			if (counts[s] !== undefined) counts[s]++;
@@ -71,12 +73,13 @@ class PokemonManager {
 			{ label: 'met',   count: counts[1] + counts[2] + counts[3], },
 			{ label: 'own',   count: counts[2] + counts[3], },
 			{ label: 'extra', count: counts[3], },
+			{ label: 'trade', count: counts[4], },
 		];
 	});
 
 	status_percent = $derived.by(() => {
 		const counts = this.status_counts;
-		const total = counts[0] + counts[1] + counts[2] + counts[3];
+		const total = counts[0] + counts[1] + counts[2] + counts[3] + counts[4];
 		return {
 			seen: 100 * (counts[1] + counts[2] + counts[3]) / total,
 			captured: 100 * (counts[2] + counts[3]) / total,

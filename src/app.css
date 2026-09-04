@@ -252,6 +252,11 @@
 	.pm.status-3 {
 		--marker-color: var(--pm-grid-color2, #a1a112);
 	}
+	.pm.status-4 {
+		--border-color: var(--pm-grid-color3, #6f7cff);
+		--pm-border-width: 4px;
+		background-color: color-mix(in srgb, var(--pm-grid-color3, #6f7cff) 8%, var(--main-bgc));
+	}
 
 	.pm.status-1,
 	.pm.status-2,
@@ -310,7 +315,8 @@
 	body:not(:has(#status_vis_0:checked)) .pm-list .pm.status-0,
 	body:not(:has(#status_vis_1:checked)) .pm-list .pm.status-1,
 	body:not(:has(#status_vis_2:checked)) .pm-list .pm.status-2,
-	body:not(:has(#status_vis_3:checked)) .pm-list .pm.status-3 {
+	body:not(:has(#status_vis_3:checked)) .pm-list .pm.status-3,
+	body:not(:has(#status_vis_4:checked)) .pm-list .pm.status-4 {
 		display: none;
 	}
 
@@ -321,7 +327,8 @@
 	body:has(#status_vis_0:checked) .pm-group.pm-group.pm-group:has(.pm.status-0),
 	body:has(#status_vis_1:checked) .pm-group.pm-group.pm-group:has(.pm.status-1),
 	body:has(#status_vis_2:checked) .pm-group.pm-group.pm-group:has(.pm.status-2),
-	body:has(#status_vis_3:checked) .pm-group.pm-group.pm-group:has(.pm.status-3) {
+	body:has(#status_vis_3:checked) .pm-group.pm-group.pm-group:has(.pm.status-3),
+	body:has(#status_vis_4:checked) .pm-group.pm-group.pm-group:has(.pm.status-4) {
 		display: flex;
 	}
 }

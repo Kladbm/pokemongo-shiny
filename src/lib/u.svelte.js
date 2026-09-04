@@ -1,6 +1,7 @@
 import * as localForage  from 'localforage';
 
 const STORAGE_KEY = 'pm-shiny-26';
+export const STATUS_COUNT = 5;
 
 export function set_item(key, data) {
 	if (!key) { return false; }
@@ -65,7 +66,11 @@ export function confirm_to_reset() {
 }
 
 export function parse_status_visibility(value = '') {
-	if (value.length !== 4 || !/^[01]{4}$/.test(value)) {
+	// Keep shared URLs created before Pending Trade was added working.
+	if (value.length === STATUS_COUNT - 1 && /^[01]+$/.test(value)) {
+		value += '1';
+	}
+	if (value.length !== STATUS_COUNT || !/^[01]+$/.test(value)) {
 		return null;
 	}
 	return Array.from(value, v => v === '1');
@@ -73,7 +78,7 @@ export function parse_status_visibility(value = '') {
 
 export function stringify_status_visibility(status_visibility = []) {
 	let res = '';
-	for (let i = 0; i < 4; i++) {
+	for (let i = 0; i < STATUS_COUNT; i++) {
 		res += status_visibility[i] ? '1' : '0';
 	}
 	return res;

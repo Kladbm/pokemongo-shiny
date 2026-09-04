@@ -82,6 +82,12 @@
 					<input type="color" bind:value={config.grid_colors[2]}>
 				</label>
 
+				<label>
+					{i18n.t('custom.grid_color.trade')}
+					<br>
+					<input type="color" bind:value={config.grid_colors[3]}>
+				</label>
+
 				<input type="reset" onclick={reset_grid_colors} style="margin-left:auto">
 			</div>
 		</li>

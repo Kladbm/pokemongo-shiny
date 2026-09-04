@@ -2,7 +2,7 @@
 	import { pokemonStore, get_name, } from '@lib/pm.svelte.js';
 	import { i18n } from '@lib/i18n.svelte.js';
 	import { config } from '@lib/config.svelte.js';
-	import { get_pm_img_src, } from '@lib/u.svelte.js';
+	import { get_pm_img_src, STATUS_COUNT, } from '@lib/u.svelte.js';
 
 	let { pm, } = $props();
 
@@ -14,7 +14,7 @@
 	let src0 = get_pm_img_src(pm.pid, false, pm.src /* TODO */ );
 
 	function handle_click_pm() {
-		pm.status = (pm.status + 1) % 4;
+		pm.status = (pm.status + 1) % STATUS_COUNT;
 	}
 
 </script>

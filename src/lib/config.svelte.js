@@ -1,5 +1,5 @@
 import pm_local_csv_url from '@data/pm.csv?url';
-import { set_item, get_item, parse_status_visibility, } from '@lib/u.svelte.js';
+import { set_item, get_item, parse_status_visibility, STATUS_COUNT, } from '@lib/u.svelte.js';
 
 // export let status = $state('');
 // export let name = $state('?');
@@ -34,16 +34,19 @@ export const DEFAULT_CONFIG = Object.freeze({
 	grid_size: 96,
 	main_bgc: '#ffffff',
 	main_color: '#213547',
-	grid_colors: ['#dddddd', '#dada0b', '#a1a112'],
+	grid_colors: ['#dddddd', '#dada0b', '#a1a112', '#6f7cff'],
 	gradient_colors: ['#000000', '#63452c'],
 	data_source: {...DEFAULT_PM_DATA_SOURCE},
-	status_visibility: [true, true, true, true, ],
+	status_visibility: Array(STATUS_COUNT).fill(true),
 });
 
 // 1. Initial State: Merge default with storage
+const stored_config = get_item('config') || {};
 export const config = $state({
 	...DEFAULT_CONFIG,
-	...get_item('config'),
+	...stored_config,
+	grid_colors: DEFAULT_CONFIG.grid_colors.map((color, index) => stored_config.grid_colors?.[index] ?? color),
+	status_visibility: DEFAULT_CONFIG.status_visibility.map((visible, index) => stored_config.status_visibility?.[index] ?? visible),
 });
 
 {

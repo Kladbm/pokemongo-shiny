@@ -25,13 +25,14 @@
 ## 1. Select your shiny pokemon
 
 Just click the shiny pokemon you have.
-There are four status for a pokemon:
+There are five status for a pokemon:
 and click will switch to next status cyclely
 
 1. none: you did not meet them before
 2. met: you met before, but not in bag now
 3. own: them just in bag~
 4. much: have much, and tradable!
+5. pending trade: you arranged to receive one in a trade
 
 ## 2. Save your list
 

@@ -23,6 +23,10 @@ const dictionaries = {
 		'en': 'Extra',
 		'zh': '有餘',
 	},
+	'status.trade': {
+		'en': 'Pending Trade',
+		'zh': '待交換',
+	},
 	'status.released': {
 		'en': 'Released',
 		'zh': '已亮相',
@@ -164,6 +168,10 @@ const dictionaries = {
 	'custom.grid_color.marker': {
 		'en': 'marker',
 		'zh': '標記',
+	},
+	'custom.grid_color.trade': {
+		'en': 'pending trade border',
+		'zh': '待交換邊框',
 	},
 	'custom.maxwidth': {
 		'en': 'Max width',

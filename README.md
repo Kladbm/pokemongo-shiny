@@ -81,9 +81,10 @@ Our data status example for 3 families:
 
 This represents our data status format.
 
-The shared URL can also include a `visibility` parameter for the four main
-filters in order: Unregistered, Registered, Owned, Extra. Use `1` for visible
-and `0` for hidden. For example, `visibility=1000` shows Unregistered only.
+The shared URL can also include a `visibility` parameter for the five main
+filters in order: Unregistered, Registered, Owned, Extra, Pending Trade. Use `1`
+for visible and `0` for hidden. For example, `visibility=10000` shows
+Unregistered only. Older four-digit visibility values remain supported.
 
 all csv columns/properties:
 
