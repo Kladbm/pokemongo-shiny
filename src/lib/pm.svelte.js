@@ -336,7 +336,9 @@ function is_regional(pid, dex) {
 			return /\.f(?:EAST|WEST)_SEA$/.test(pid);
 		case 550:
 			return /\.f(?:RED|BLUE)_STRIPED$/.test(pid);
-		case 669:
+		case 669: // Flabébé
+		case 670: // Floette
+		case 671: // Florges
 			return /\.f(?:RED|YELLOW|BLUE)$/.test(pid);
 		case 676:
 			return /\.f(?:DEBUTANTE|STAR|DIAMOND|LA_REINE|KABUKI|PHARAOH)$/.test(pid);
