@@ -317,9 +317,9 @@ const ULTRA_BEAST_DEX = new Set([793, 794, 795, 796, 797, 798, 799, 803, 804, 80
 // Species whose usual Pokémon GO availability is geographically restricted.
 // Form-specific entries are handled separately so globally available forms do not inherit the tag.
 const REGIONAL_DEX = new Set([
-	115, 128, 214, 313, 324, 335, 336, 337, 357, 369, 417, 441, 455,
-	480, 481, 482, 511, 513, 515, 538, 539, 556, 561, 626, 631, 632,
-	666, 701, 707, 741, 764, 794, 795, 796, 797, 798, 805, 806, 874, 931, 978,
+	115, 128, 214, 313, 314, 324, 335, 336, 337, 338, 357, 369, 417, 441, 455,
+	480, 481, 482, 511, 512, 513, 514, 515, 516, 538, 539, 556, 561, 626, 631, 632,
+	666, 701, 707, 741, 764, 794, 795, 796, 797, 798, 805, 806, 874, 978,
 ]);
 
 function is_regional(pid, dex) {
@@ -329,10 +329,13 @@ function is_regional(pid, dex) {
 		case 83:
 			return pid === 'pm83'; // Kantonian Farfetch'd; Galarian Farfetch'd is not geographic.
 		case 122:
-			return pid === 'pm122' || pid === 'pm439'; // Mr. Mime and Mime Jr.; not their Galarian forms.
+			return pid === 'pm122'; // Kantonian Mr. Mime; not its Galarian form.
+		case 439:
+			return pid === 'pm439'; // Mime Jr. is regional with its Kantonian evolution line.
 		case 222:
 			return pid === 'pm222'; // Johto Corsola; not Galarian Corsola or its costume.
 		case 422:
+		case 423:
 			return /\.f(?:EAST|WEST)_SEA$/.test(pid);
 		case 550:
 			return /\.f(?:RED|BLUE)_STRIPED$/.test(pid);
@@ -342,6 +345,8 @@ function is_regional(pid, dex) {
 			return /\.f(?:RED|YELLOW|BLUE)$/.test(pid);
 		case 676:
 			return /\.f(?:DEBUTANTE|STAR|DIAMOND|LA_REINE|KABUKI|PHARAOH)$/.test(pid);
+		case 931:
+			return /\.f(?:GREEN|BLUE)/.test(pid);
 		default:
 			return false;
 	}
