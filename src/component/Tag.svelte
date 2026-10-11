@@ -9,7 +9,7 @@
 		Object.keys(pokemonStore.tags)
 			.toSorted()
 			.reduce((all, tag) => {
-				const target = filter_manager.get_cate([...tag][0]);
+				const target = filter_manager.get_cate(tag);
 
 				if (!all[target]) {
 					all[target] = [];

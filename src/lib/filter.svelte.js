@@ -67,7 +67,7 @@ class FilterManager {
 			if (_status === -1) {
 				_excludes.add(_tag);
 			} else if (_status === 1) {
-				const _cate = this.get_cate([..._tag][0]);
+				const _cate = this.get_cate(_tag);
 				if (!_cates_map.has(_cate)) _cates_map.set(_cate, new Set());
 				_cates_map.get(_cate).add(_tag);
 			}
