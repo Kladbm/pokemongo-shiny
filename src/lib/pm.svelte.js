@@ -294,6 +294,55 @@ function sort_by_group_id (a, b) {
 	});
 };
 
+const LEGENDARY_DEX = new Set([
+	144, 145, 146, 150,
+	243, 244, 245, 249, 250,
+	377, 378, 379, 380, 381, 382, 383, 384,
+	480, 481, 482, 483, 484, 485, 486, 487, 488,
+	638, 639, 640, 641, 642, 643, 644, 645, 646,
+	716, 717, 718,
+	785, 786, 787, 788, 789, 790, 791, 792, 800,
+	888, 889, 890, 891, 892, 894, 895, 896, 897, 898, 905,
+]);
+
+const MYTHICAL_DEX = new Set([
+	151, 251, 385, 386, 489, 490, 491, 492, 493, 494,
+	647, 648, 649, 719, 720, 721, 801, 802, 807, 808, 809, 893, 1025,
+]);
+
+const ULTRA_BEAST_DEX = new Set([793, 794, 795, 796, 797, 798, 799, 803, 804, 805, 806]);
+
+// Species whose usual Pokémon GO availability is geographically restricted.
+// Form-specific entries are handled separately so globally available forms do not inherit the tag.
+const REGIONAL_DEX = new Set([
+	115, 128, 214, 313, 324, 335, 336, 337, 357, 369, 417, 441, 455,
+	480, 481, 482, 511, 513, 515, 538, 539, 556, 561, 626, 631, 632,
+	666, 701, 707, 741, 764, 794, 795, 796, 797, 798, 805, 806, 874, 931, 978,
+]);
+
+function is_regional(pid, dex) {
+	if (REGIONAL_DEX.has(dex)) return true;
+
+	switch (dex) {
+		case 83:
+			return pid === 'pm83'; // Kantonian Farfetch'd; Galarian Farfetch'd is not geographic.
+		case 122:
+			return pid === 'pm122' || pid === 'pm439'; // Mr. Mime and Mime Jr.; not their Galarian forms.
+		case 222:
+			return pid === 'pm222'; // Johto Corsola; not Galarian Corsola or its costume.
+		case 422:
+			return /\.f(?:EAST|WEST)_SEA$/.test(pid);
+		case 550:
+			return /\.f(?:RED|BLUE)_STRIPED$/.test(pid);
+		case 669:
+			return /\.f(?:RED|YELLOW|BLUE)$/.test(pid);
+		case 676:
+			return /\.f(?:DEBUTANTE|STAR|DIAMOND|LA_REINE|KABUKI|PHARAOH)$/.test(pid);
+		default:
+			return false;
+	}
+}
+
 function get_default_tags(pid = '', dex = 1) {
 	let tags = [];
 	// if (!tags.includes('costume')) {
@@ -354,6 +403,11 @@ function get_default_tags(pid = '', dex = 1) {
 		default:
 			break;
 	}
+
+	if (LEGENDARY_DEX.has(dex)) tags.push('🧩legendary');
+	if (MYTHICAL_DEX.has(dex)) tags.push('🧩mythical');
+	if (ULTRA_BEAST_DEX.has(dex)) tags.push('🧩ultra-beast');
+	if (is_regional(pid, dex)) tags.push('📍regional');
 
 	return tags;
 }
