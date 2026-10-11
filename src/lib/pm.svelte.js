@@ -239,7 +239,9 @@ function handle_pms(pms) {
 			pm.tag = [...new Set(
 					[
 						`🧬gen${get_gen(dex) ?? 1}`,
-						...(pm.tag || '').split(/\=/),
+						...(pm.tag || '').split(/\=/).map(tag =>
+							['baby', 'costume'].includes(tag) ? `🏷️${tag}` : tag
+						),
 						...get_default_tags(pm.pid, dex)
 					]
 				)].filter(Boolean);
@@ -406,7 +408,7 @@ function get_default_tags(pid = '', dex = 1) {
 
 	if (LEGENDARY_DEX.has(dex)) tags.push('🧩legendary');
 	if (MYTHICAL_DEX.has(dex)) tags.push('🧩mythical');
-	if (ULTRA_BEAST_DEX.has(dex)) tags.push('🧩ultra-beast');
+	if (ULTRA_BEAST_DEX.has(dex)) tags.push('🧩ultra beast');
 	if (is_regional(pid, dex)) tags.push('📍regional');
 
 	return tags;

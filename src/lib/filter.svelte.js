@@ -12,9 +12,20 @@ const custom_style_when_filtered = `
 	order: var(--dex-order);
 }`;
 
+const LEGACY_TAG_NAMES = {
+	baby: '🏷️baby',
+	costume: '🏷️costume',
+};
+
+function migrate_filter_state(filter_state = {}) {
+	return Object.fromEntries(
+		Object.entries(filter_state).map(([tag, state]) => [LEGACY_TAG_NAMES[tag] || tag, state])
+	);
+}
+
 class FilterManager {
-	filter_cates = ['🧬', '📍', '🐣', '🧩'];
-	filter_state = $state(get_item('filter_state') || {});
+	filter_cates = ['🧬', '📍', '🐣', '🏷️', '🧩'];
+	filter_state = $state(migrate_filter_state(get_item('filter_state') || {}));
 
 	reset_filter() {
 		console.log(111, 'reset');
@@ -26,7 +37,8 @@ class FilterManager {
 	}
 
 	get_cate(tag = '') {
-		return this.filter_cates.includes(tag) ? tag : '🧩';
+		const cate = tag.startsWith('🏷️') ? '🏷️' : [...tag][0];
+		return this.filter_cates.includes(cate) ? cate : '🧩';
 	}
 
 	/**
