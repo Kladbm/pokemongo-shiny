@@ -5,17 +5,48 @@
 	import { config, session } from '@lib/config.svelte.js';
 	import { filter_manager } from '@lib/filter.svelte.js';
 
-	let custom_style = $derived(`
-		--seen-percent:${pokemonStore.status_percent.seen}%;
-		--captured-percent:${pokemonStore.status_percent.captured}%;
-	`);
-	// Release is the total currently shown in the grid: tag-filtered and with
-	// every disabled status removed, just like the cards below the dashboard.
-	let released_count = $derived.by(() => {
+	// Dashboard status cards follow tag filters, but remain independent from the
+	// visibility switches so they still describe the selected collection.
+	let filtered_status_counts = $derived.by(() => {
 		const hidden_pids = filter_manager.get_hidden_pids(pokemonStore.pid_with_tags);
-		return pokemonStore.sorted_pms.filter(pm =>
-			config.status_visibility[pm.status] && !hidden_pids.has(pm.pid)
-		).length;
+		const counts = [0, 0, 0, 0, 0];
+
+		pokemonStore.sorted_pms.forEach(pm => {
+			if (!hidden_pids.has(pm.pid)) counts[Number(pm.status || 0)]++;
+		});
+
+		return counts;
+	});
+
+	let filtered_status_summary = $derived.by(() => {
+		const counts = filtered_status_counts;
+		return [
+			{ label: 'none',  count: counts[0], },
+			{ label: 'met',   count: counts[1] + counts[2] + counts[3], },
+			{ label: 'own',   count: counts[2] + counts[3], },
+			{ label: 'extra', count: counts[3], },
+			{ label: 'trade', count: counts[4], },
+		];
+	});
+
+	let filtered_status_percent = $derived.by(() => {
+		const counts = filtered_status_counts;
+		const total = counts.reduce((sum, count) => sum + count, 0);
+		return {
+			seen: total ? 100 * (counts[1] + counts[2] + counts[3]) / total : 0,
+			captured: total ? 100 * (counts[2] + counts[3]) / total : 0,
+		};
+	});
+
+	let custom_style = $derived(`
+		--seen-percent:${filtered_status_percent.seen}%;
+		--captured-percent:${filtered_status_percent.captured}%;
+	`);
+	// Release is the selected collection after disabled statuses are removed,
+	// exactly like the cards currently visible in the grid.
+	let released_count = $derived.by(() => {
+		return filtered_status_counts.reduce((sum, count, status) =>
+			sum + (config.status_visibility[status] ? count : 0), 0);
 	});
 
 </script>
@@ -37,7 +68,7 @@
 
 
 	<div class="dashboard">
-		{#each pokemonStore.status_summary as st, index}
+		{#each filtered_status_summary as st, index}
 
 			{#if index}
 			/
