@@ -3,12 +3,20 @@
 	import { i18n } from '@lib/i18n.svelte.js';
 	import { pokemonStore, } from '@lib/pm.svelte.js';
 	import { config, session } from '@lib/config.svelte.js';
+	import { filter_manager } from '@lib/filter.svelte.js';
 
 	let custom_style = $derived(`
 		--seen-percent:${pokemonStore.status_percent.seen}%;
 		--captured-percent:${pokemonStore.status_percent.captured}%;
 	`);
-	let released_count = $derived(pokemonStore.sorted_pms.length);
+	// Release is the total currently shown in the grid: tag-filtered and with
+	// every disabled status removed, just like the cards below the dashboard.
+	let released_count = $derived.by(() => {
+		const hidden_pids = filter_manager.get_hidden_pids(pokemonStore.pid_with_tags);
+		return pokemonStore.sorted_pms.filter(pm =>
+			config.status_visibility[pm.status] && !hidden_pids.has(pm.pid)
+		).length;
+	});
 
 </script>
 

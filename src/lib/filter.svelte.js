@@ -42,28 +42,19 @@ class FilterManager {
 	}
 
 	/**
-	 * generate css rules based on filter state
+	 * Return the ids hidden by the active tag filters. Keeping this separate
+	 * from CSS generation lets other UI elements use the exact same filter rules.
 	 * @param {Map<string, string[]>} pid_with_tags - Map of pid to tag array
-	 * @returns {string} - css string to be injected into <style>
+	 * @returns {Set<string>}
 	 */
-	get_filter_css() {
-		// console.log('get_filter_css', pokemonStore.pid_with_tags);
+	get_hidden_pids(pid_with_tags = pokemonStore.pid_with_tags) {
+		if (!pid_with_tags) return new Set();
 
-		if (!pokemonStore.pid_with_tags) {
-			return;
-		}
-
-		Object.keys(this.filter_state);
 		const _current_state = $state.snapshot(this.filter_state);
-
-
-		// 1. prepare local rules for performance
 		const _excludes = new Set();
 		const _cates_map = new Map();
 
-		// console.log(111, this.filter_state);
-
-		for (const [_tag, _status] of Object.entries(this.filter_state)) {
+		for (const [_tag, _status] of Object.entries(_current_state)) {
 			if (_status === -1) {
 				_excludes.add(_tag);
 			} else if (_status === 1) {
@@ -74,13 +65,9 @@ class FilterManager {
 		}
 
 		const _active_cate_sets = Array.from(_cates_map.values());
-		const _hide_list = [];
+		const _hidden_pids = new Set();
 
-
-		// 2. hot loop using for...of for Map performance
-		// _pid: string, _my_tags: string[]
-
-		for (const [_pid, _my_tags] of pokemonStore.pid_with_tags) {
+		for (const [_pid, _my_tags] of pid_with_tags) {
 			let _is_match = true;
 
 			// priority 1: global exclusion (AND logic)
@@ -96,14 +83,23 @@ class FilterManager {
 				});
 			}
 
-			if (!_is_match) _hide_list.push(_pid);
+			if (!_is_match) _hidden_pids.add(_pid);
 		}
 
-		if (_hide_list.length === 0) return '';
+		return _hidden_pids;
+	}
 
-		// 3. build efficient css selectors using attribute selectors
-		// [data-pid="xxx"] handles pids with dots perfectly
-		return _hide_list
+	/**
+	 * generate css rules based on filter state
+	 * @param {Map<string, string[]>} pid_with_tags - Map of pid to tag array
+	 * @returns {string} - css string to be injected into <style>
+	 */
+	get_filter_css(pid_with_tags = pokemonStore.pid_with_tags) {
+		const _hidden_pids = this.get_hidden_pids(pid_with_tags);
+
+		if (_hidden_pids.size === 0) return '';
+
+		return [..._hidden_pids]
 			.map(_id => `.pm[data-pid="${_id}"]`)
 			.join(',\n') + '{display:none !important;}' + custom_style_when_filtered;
 	}
